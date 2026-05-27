@@ -1,553 +1,505 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEVAZ - Simple Past Diagnostic Test 1</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>CEVAZ - Simple Past Diagnostic Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Deshabilitar selección de texto para evitar copiar preguntas */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+        /* Strict display control to completely fix the Part 4 bug and enable layout animations */
+        .step-content { 
+            display: none !important; 
         }
+        .step-content.active { 
+            display: flex !important; 
+            flex-direction: column;
+            flex-grow: 1;
+            animation: fadeIn 0.4s ease-in-out forwards; 
+        }
+        .fade-out-active { 
+            animation: fadeOut 0.4s ease-in-out forwards !important; 
+            pointer-events: none; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(12px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes fadeOut { 
+            from { opacity: 1; transform: translateY(0); } 
+            to { opacity: 0; transform: translateY(-12px); } 
+        }
+
+        body { user-select: none; -webkit-user-select: none; } 
+        input, textarea, select { user-select: text; -webkit-user-select: text; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800 antialiased minimal-scrollbar">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-xs">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <img src="https://docs.google.com/uc?export=download&id=15yPJCZ18um-jQjd-m0Z_FB1nw36uzcTL" 
-                     alt="CEVAZ Logo" 
-                     class="h-12 w-auto object-contain" 
-                     onerror="this.src='https://placehold.co/150x50?text=CEVAZ+ACADEMIC'">
-                <div>
-                    <h1 class="text-lg font-bold text-blue-900 leading-tight">Academic Department</h1>
-                    <p class="text-xs text-gray-500 font-medium">MINI COURSE: Simple Past — Diagnostic Test 1</p>
-                </div>
+    <header class="bg-white border-b border-slate-200 py-3 px-6 sticky top-0 z-50 shadow-sm flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+           <img src="https://lh3.googleusercontent.com/d/15yPJCZ18um-jQjd-m0Z_FB1nw36uzcTL" alt="CEVAZ Logo" class="h-12 w-auto object-contain" onerror="this.src='https://placehold.co/150x50?text=CEVAZ+LOGO'">
+            <div>
+                <h1 class="text-lg font-bold text-slate-900 tracking-tight">Academic Department</h1>
+                <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Mini Course: Simple Past</p>
             </div>
-            <div id="security-badge" class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-3 py-1.5 rounded-full text-xs font-semibold shadow-xs transition-all duration-300">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-                <span id="security-text">EXAM SECURE • 0 STRIKES</span>
-            </div>
+        </div>
+        <div id="security-badge" class="hidden flex items-center bg-emerald-100 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wide border border-emerald-200 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Secured Connection
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-8">
-        <form id="quiz-form" onsubmit="handleFormSubmission(event)">
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6 w-full max-w-4xl mx-auto overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xl w-full overflow-hidden min-h-[600px] flex flex-col border border-slate-200">
             
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8 transition-all">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <span>👤</span> Student Identification Data
-                    </h2>
-                    <p class="text-xs text-gray-500">Todos los campos son obligatorios antes de enviar el examen.</p>
-                </div>
+            <form id="test-form" onsubmit="event.preventDefault();" class="flex-grow flex flex-col">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Full Name</label>
-                        <input type="text" id="student-name" required placeholder="E.g. JOHN DOE" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
+                <div id="step-0" class="step-content active p-6 md:p-10 space-y-6">
+                    <div class="text-center space-y-2 mb-4">
+                        <h2 class="text-3xl font-extrabold text-blue-900">Welcome to the Assessment</h2>
+                        <p class="text-sm text-slate-500">Please provide your academic credentials to proceed.</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Student ID (Cédula)</label>
-                        <input type="text" id="student-id" required placeholder="E.g. 25123456" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">Email Address</label>
-                        <input type="email" id="student-email" required placeholder="john.doe@example.com" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">CEVAZ Branch</label>
-                        <select id="student-branch" required class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
-                            <option value="" disabled selected>Select your branch...</option>
-                            <option value="CEVAZ LAS DELICIAS">CEVAZ Las Delicias</option>
-                            <option value="CEVAZ LA LIMPIA">CEVAZ La Limpia</option>
-                            <option value="CEVAZ CABIMAS">CEVAZ Cabimas</option>
-                            <option value="CEVAZ ONLINE">CEVAZ Online / Virtual</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-5 pt-4 border-t border-gray-100 flex items-center gap-6">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-600">Test Modality:</span>
-                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                        <input type="radio" name="test-type" value="REGULAR DIAGNOSTIC" checked class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                        <span>Regular Diagnostic</span>
-                    </label>
-                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                        <input type="radio" name="test-type" value="MAKEUP EXAM" class="text-blue-600 focus:ring-blue-500 h-4 w-4">
-                        <span>Makeup / Remedial</span>
-                    </label>
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 1</span>
-                    <h3 class="text-lg font-bold text-gray-900">Listening Comprehension</h3>
-                    <p class="text-xs text-gray-500">Listen to the audio carefully. You will hear the story twice. Choose the correct answer or fill in the blank.</p>
-                </div>
-
-                <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">🎧</span>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-800">Sarah's Last Vacation Audio Track</p>
-                            <p class="text-xs text-slate-500">Press play to start listening (Max 2 repetitions allowed).</p>
-                        </div>
-                    </div>
-                    <audio controls class="w-full sm:w-64">
-                        <source src="" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-
-                <div class="space-y-6">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">1. Where did Sarah go for her last vacation?</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q1" value="a" required class="text-blue-600"> <span>a) The beach</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q1" value="b" class="text-blue-600"> <span>b) The mountains</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q1" value="c" class="text-blue-600"> <span>c) The city</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">2. Who did she travel with?</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q2" value="a" required class="text-blue-600"> <span>a) Her friends</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q2" value="b" class="text-blue-600"> <span>b) Her family</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q2" value="c" class="text-blue-600"> <span>c) Her boyfriend</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">3. What was the problem on the first day?</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q3" value="a" required class="text-blue-600"> <span>a) It rained.</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q3" value="b" class="text-blue-600"> <span>b) They lost their luggage.</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm cursor-pointer hover:bg-gray-100 transition-all">
-                                <input type="radio" name="p1_q3" value="c" class="text-blue-600"> <span>c) The hotel was closed.</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">4. Name one activity Sarah did during the trip:</label>
-                        <input type="text" id="p1_q4" required placeholder="Type your answer here..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">5. How long was the trip?</label>
-                        <input type="text" id="p1_q5" required placeholder="Type your answer here..." class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all">
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 2</span>
-                    <h3 class="text-lg font-bold text-gray-900">Reading Comprehension</h3>
-                    <p class="text-xs text-gray-500">Read the email about a business trip. Then, answer True (T) or False (F). Correct the false statements.</p>
-                </div>
-
-                <div class="bg-linear-to-b from-blue-50/40 to-white rounded-xl p-5 border border-blue-100 mb-6 text-sm leading-relaxed shadow-xs">
-                    <div class="border-b border-blue-100/60 pb-2 mb-3 text-xs font-mono text-gray-600 space-y-1">
-                        <p><span class="font-bold text-blue-900">To:</span> Team</p>
-                        <p><span class="font-bold text-blue-900">Subject:</span> My business trip to Bogota</p>
-                    </div>
-                    <p class="mb-3 font-semibold text-gray-700">Hi everyone,</p>
-                    <p class="mb-3 text-gray-600">I returned from Bogota last night. The trip was excellent, but very exhausting. I arrived on Wednesday morning and went directly to the hotel. The conference started at 2:00 PM. I didn't have time to eat lunch! On Thursday, I presented our new project. The managers were very happy with the results. Fortunately, it wasn't all work. On Friday evening, I visited Monserrate and ate delicious local food. I took a lot of photos. See you in the office tomorrow!</p>
-                    <p class="font-semibold text-gray-700">Best,<br>Carlos</p>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-sm font-medium text-gray-800 mb-2">1. Carlos arrived in Bogota on Wednesday night.</p>
-                        <div class="flex items-center gap-4 mb-3">
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q1_val" value="T" required> T</label>
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q1_val" value="F"> F</label>
-                        </div>
-                        <input type="text" id="p2_q1_corr" placeholder="If False, write correction here..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-blue-500">
-                    </div>
-
-                    <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-sm font-medium text-gray-800 mb-2">2. He ate a big lunch on Wednesday.</p>
-                        <div class="flex items-center gap-4 mb-3">
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q2_val" value="T" required> T</label>
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q2_val" value="F"> F</label>
-                        </div>
-                        <input type="text" id="p2_q2_corr" placeholder="If False, write correction here..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-blue-500">
-                    </div>
-
-                    <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-sm font-medium text-gray-800 mb-2">3. On Thursday, he presented our new project.</p>
-                        <div class="flex items-center gap-4 mb-3">
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q3_val" value="T" required> T</label>
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q3_val" value="F"> F</label>
-                        </div>
-                        <input type="text" id="p2_q3_corr" placeholder="If False, write correction here..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-blue-500">
-                    </div>
-
-                    <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-sm font-medium text-gray-800 mb-2">4. The managers were unhappy with the results.</p>
-                        <div class="flex items-center gap-4 mb-3">
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q4_val" value="T" required> T</label>
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q4_val" value="F"> F</label>
-                        </div>
-                        <input type="text" id="p2_q4_corr" placeholder="If False, write correction here..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-blue-500">
-                    </div>
-
-                    <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-sm font-medium text-gray-800 mb-2">5. Carlos visited Monserrate on Friday evening.</p>
-                        <div class="flex items-center gap-4 mb-3">
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q5_val" value="T" required> T</label>
-                            <label class="inline-flex items-center gap-1 text-sm"><input type="radio" name="p2_q5_val" value="F"> F</label>
-                        </div>
-                        <input type="text" id="p2_q5_corr" placeholder="If False, write correction here..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-hidden focus:border-blue-500">
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 3A</span>
-                    <h3 class="text-lg font-bold text-gray-900">The Networking Event (Information Gap)</h3>
-                    <p class="text-xs text-gray-500">Write the missing questions based on the answers provided below.</p>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <label class="block text-xs font-bold text-blue-900 mb-1">Question 1:</label>
-                        <input type="text" id="p3a_q1" required placeholder="Write question..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500">
-                        <p class="text-xs font-semibold text-gray-500 mt-1.5 ml-1">Answer: I worked at Microsoft for three years.</p>
-                    </div>
-
-                    <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <label class="block text-xs font-bold text-blue-900 mb-1">Question 2:</label>
-                        <input type="text" id="p3a_q2" required placeholder="Write question..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500">
-                        <p class="text-xs font-semibold text-gray-500 mt-1.5 ml-1">Answer: I left because I wanted to start my own business.</p>
-                    </div>
-
-                    <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <label class="block text-xs font-bold text-blue-900 mb-1">Question 3:</label>
-                        <input type="text" id="p3a_q3" required placeholder="Write question..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500">
-                        <p class="text-xs font-semibold text-gray-500 mt-1.5 ml-1">Answer: Yes, I did. I met many interesting people at the conference.</p>
-                    </div>
-
-                    <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <label class="block text-xs font-bold text-blue-900 mb-1">Question 4:</label>
-                        <input type="text" id="p3a_q4" required placeholder="Write question..." class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:border-blue-500">
-                        <p class="text-xs font-semibold text-gray-500 mt-1.5 ml-1">Answer: No, he didn't. Mike didn't come with me; he stayed home.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 3B</span>
-                    <h3 class="text-lg font-bold text-gray-900">Grammar: Simple Past Fill-in-the-Blanks</h3>
-                    <p class="text-xs text-gray-500">Complete the paragraph with the correct past form of the verbs in parentheses.</p>
-                </div>
-
-                <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-sm leading-8 text-gray-700">
-                    Yesterday (1) 
-                    <input type="text" id="p3b_1" required placeholder="(be)" class="w-24 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    a very busy day. I (2) 
-                    <input type="text" id="p3b_2" required placeholder="(wake up)" class="w-28 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    early, had breakfast, and (3) 
-                    <input type="text" id="p3b_3" required placeholder="(go)" class="w-24 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    to the library. I (4) 
-                    <input type="text" id="p3b_4" required placeholder="(study)" class="w-24 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    for four hours. In the afternoon, I (5) 
-                    <input type="text" id="p3b_5" required placeholder="(invite)" class="w-24 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    my friend to watch a movie, but he (6) 
-                    <input type="text" id="p3b_6" required placeholder="(not / go)" class="w-28 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    because he (7) 
-                    <input type="text" id="p3b_7" required placeholder="(be)" class="w-24 bg-white border border-gray-300 rounded px-2 py-0.5 text-center text-sm font-semibold focus:outline-hidden focus:border-blue-500"> 
-                    sick.
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 3C</span>
-                    <h3 class="text-lg font-bold text-gray-900">Pronunciation Classification Matrix</h3>
-                    <p class="text-xs text-gray-500">Classify the following regular verbs into the correct ending pronunciation column (/t/, /d/, or /id/). Select carefully.</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">worked</span>
-                        <select id="p3c_worked" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">played</span>
-                        <select id="p3c_played" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">wanted</span>
-                        <select id="p3c_wanted" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">watched</span>
-                        <select id="p3c_watched" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">needed</span>
-                        <select id="p3c_needed" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">listened</span>
-                        <select id="p3c_listened" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">stopped</span>
-                        <select id="p3c_stopped" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">started</span>
-                        <select id="p3c_started" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">called</span>
-                        <select id="p3c_called" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                    <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-700 block mb-1">visited</span>
-                        <select id="p3c_visited" required class="w-full bg-white border border-gray-200 rounded px-2 py-1 text-xs focus:outline-hidden focus:border-blue-500 font-semibold text-blue-900">
-                            <option value="" disabled selected>Select sound...</option>
-                            <option value="/t/">Sound /t/</option>
-                            <option value="/d/">Sound /d/</option>
-                            <option value="/id/">Sound /id/</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-8">
-                <div class="border-b border-gray-100 pb-3 mb-5">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold uppercase px-2.5 py-1 rounded-sm mb-2 inline-block">Part 4</span>
-                    <h3 class="text-lg font-bold text-gray-900">Written Production (Free Output)</h3>
-                    <p class="text-xs text-gray-500">Write a short paragraph (50-80 words) about a memorable day in your past (your last vacation, a special birthday, or a trip). Ensure you use a mix of regular/irregular verbs, the verb to be, and at least one negative sentence.</p>
-                </div>
-
-                <div>
-                    <textarea id="part4-text" required rows="6" oninput="trackWritingMetrics()" placeholder="Start typing your paragraph here..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-hidden focus:border-blue-500 focus:bg-white transition-all resize-none leading-relaxed"></textarea>
                     
-                    <div class="flex items-center justify-between mt-2 px-1">
-                        <div id="word-count-badge" class="text-xs font-semibold text-red-600 bg-red-50 border border-red-100 px-2.5 py-1 rounded-md transition-all">
-                            Word Count: <span id="current-words">0</span> / 50-80 words required
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Full Name</label>
+                            <input type="text" id="student-name" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. Jane Doe">
                         </div>
-                        <p class="text-2xs text-gray-400 font-mono">System auto-saves text state buffer</p>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">ID Number (Cédula)</label>
+                            <input type="number" id="student-id" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. 29123456">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Email Address</label>
+                            <input type="email" id="student-email" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="student@cevaz.com">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Campus Branch</label>
+                            <select id="student-branch" required class="w-full px-4 py-3 border border-slate-300 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition font-medium text-slate-700">
+                                <option value="" disabled selected>Choose your current branch...</option>
+                                <option value="LA LIMPIA">LA LIMPIA</option>
+                                <option value="SAN FRANCISCO">SAN FRANCISCO</option>
+                                <option value="LAS MERCEDES">LAS MERCEDES</option>
+                                <option value="CEVAZ DIGITAL">CEVAZ DIGITAL</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 mt-4">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-blue-800 mb-3 text-center">Select Academic Modality</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center justify-center p-3 bg-white border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition shadow-sm">
+                                <input type="radio" name="test-type" value="Diagnostic Test 1" checked class="w-4 h-4 text-blue-600">
+                                <span class="ml-2 font-bold text-sm text-blue-900">Diagnostic Test 1</span>
+                            </label>
+                            <label class="flex items-center justify-center p-3 bg-white border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition shadow-sm">
+                                <input type="radio" name="test-type" value="Diagnostic Test 2" class="w-4 h-4 text-blue-600">
+                                <span class="ml-2 font-bold text-sm text-blue-900">Diagnostic Test 2</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 mt-auto">
+                        <button type="button" onclick="startAssessment()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl hover:bg-blue-700 transition shadow-lg text-lg uppercase tracking-wider">
+                            Start Assessment
+                        </button>
                     </div>
                 </div>
-            </section>
 
-            <div class="flex items-center justify-end gap-4 mt-4">
-                <button type="submit" id="submit-btn" class="bg-blue-900 text-white font-bold text-sm px-8 py-3.5 rounded-xl cursor-pointer shadow-md hover:bg-blue-950 transition-all active:scale-98 flex items-center gap-2">
-                    <span>🚀</span> Submit Diagnostic Test
-                </button>
-            </div>
-        </form>
+                <div id="step-1" class="step-content p-6 md:p-10 space-y-6">
+                    <div class="border-b-2 border-blue-100 pb-2 mb-4">
+                        <h3 class="text-2xl font-black text-slate-800">Part 1: Listening Comprehension</h3>
+                        <p class="text-sm text-slate-500">Listen to the audio carefully. You will hear the story twice. Choose the correct answer or fill in the blank.</p>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-3">1. Where did Sarah go for her last vacation?</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="a" class="mr-2"> a) The beach</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="b" class="mr-2"> b) The mountains</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="c" class="mr-2"> c) The city</label>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-3">2. Who did she travel with?</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="a" class="mr-2"> a) Her friends</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="b" class="mr-2"> b) Her family</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="c" class="mr-2"> c) Her boyfriend</label>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="font-bold text-slate-800 mb-3">3. What was the problem on the first day?</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="a" class="mr-2"> a) It rained.</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="b" class="mr-2"> b) They lost their luggage.</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="c" class="mr-2"> c) The hotel was closed.</label>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <label class="block font-bold text-slate-800 mb-2">4. Name one activity Sarah did during the trip:</label>
+                                <input type="text" id="p1_q4" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="E.g. Played board games">
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <label class="block font-bold text-slate-800 mb-2">5. How long was the trip?</label>
+                                <input type="text" id="p1_q5" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="E.g. One week">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-6 mt-auto">
+                        <button type="button" onclick="navigate(2)" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition">Next: Part 2</button>
+                    </div>
+                </div>
+
+                <div id="step-2" class="step-content p-6 md:p-10 space-y-6">
+                    <div class="border-b-2 border-blue-100 pb-2 mb-4">
+                        <h3 class="text-2xl font-black text-slate-800">Part 2: Reading Comprehension</h3>
+                        <p class="text-sm text-slate-500">Read the email about a business trip. Then, answer True (T) or False (F). Correct the false statements.</p>
+                    </div>
+
+                    <div class="bg-blue-50 text-slate-800 rounded-xl p-5 border border-blue-200 font-mono text-sm leading-relaxed shadow-inner">
+                        <p class="border-b border-blue-200 pb-1"><strong>To:</strong> Team</p>
+                        <p class="border-b border-blue-200 pb-1 mb-2"><strong>Subject:</strong> My business trip to Bogota</p>
+                        <p>Hi everyone,</p>
+                        <p class="mt-2 text-justify">I returned from Bogota last night. The trip was excellent, but very exhausting. I arrived on Wednesday morning and went directly to the hotel. The conference started at 2:00 PM. I didn't have time to eat lunch! On Thursday, I presented our new project. The managers were very happy with the results. Fortunately, it wasn't all work. On Friday evening, I visited Monserrate and ate delicious local food. I took a lot of photos. See you in the office tomorrow!</p>
+                        <p class="mt-2">Best,<br><strong>Carlos</strong></p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex items-center justify-between gap-4">
+                                <p class="text-sm font-semibold text-slate-800">1. Carlos arrived in Bogota on Wednesday night.</p>
+                                <div class="flex space-x-2 shrink-0">
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q1_val" value="T" onchange="toggleCorrection(1, false)"> T</label>
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q1_val" value="F" onchange="toggleCorrection(1, true)"> F</label>
+                                </div>
+                            </div>
+                            <input type="text" id="p2_q1_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex items-center justify-between gap-4">
+                                <p class="text-sm font-semibold text-slate-800">2. He ate a big lunch before the conference.</p>
+                                <div class="flex space-x-2 shrink-0">
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q2_val" value="T" onchange="toggleCorrection(2, false)"> T</label>
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q2_val" value="F" onchange="toggleCorrection(2, true)"> F</label>
+                                </div>
+                            </div>
+                            <input type="text" id="p2_q2_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex items-center justify-between gap-4">
+                                <p class="text-sm font-semibold text-slate-800">3. The presentation was on Thursday.</p>
+                                <div class="flex space-x-2 shrink-0">
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q3_val" value="T" onchange="toggleCorrection(3, false)"> T</label>
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q3_val" value="F" onchange="toggleCorrection(3, true)"> F</label>
+                                </div>
+                            </div>
+                            <input type="text" id="p2_q3_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex items-center justify-between gap-4">
+                                <p class="text-sm font-semibold text-slate-800">4. Carlos didn't visit any tourist places.</p>
+                                <div class="flex space-x-2 shrink-0">
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q4_val" value="T" onchange="toggleCorrection(4, false)"> T</label>
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q4_val" value="F" onchange="toggleCorrection(4, true)"> F</label>
+                                </div>
+                            </div>
+                            <input type="text" id="p2_q4_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex items-center justify-between gap-4">
+                                <p class="text-sm font-semibold text-slate-800">5. The managers liked the new project.</p>
+                                <div class="flex space-x-2 shrink-0">
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q5_val" value="T" onchange="toggleCorrection(5, false)"> T</label>
+                                    <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q5_val" value="F" onchange="toggleCorrection(5, true)"> F</label>
+                                </div>
+                            </div>
+                            <input type="text" id="p2_q5_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between pt-6 mt-auto">
+                        <button type="button" onclick="navigate(1)" class="bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-xl hover:bg-slate-300 transition">Previous</button>
+                        <button type="button" onclick="navigate(3)" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition">Next: Part 3</button>
+                    </div>
+                </div>
+
+                <div id="step-3" class="step-content p-6 md:p-10 space-y-8">
+                    <div class="border-b-2 border-blue-100 pb-2 mb-4">
+                        <h3 class="text-2xl font-black text-slate-800">Part 3: Language Usage</h3>
+                        <p class="text-sm text-slate-500">Controlled Production</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">A. The Networking Event</h4>
+                        <p class="text-sm text-slate-600 mb-3">Formulate the missing questions based on your colleague's answers. Pay attention to DID, WAS, and WERE.</p>
+                        <div class="bg-slate-50 p-4 rounded-xl border space-y-4 text-sm">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 1.</span> <input type="text" id="p3a_q1" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about their employment..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: I worked at Microsoft for five years.</p>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 2.</span> <input type="text" id="p3a_q2" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about leaving..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: I left because I wanted to move to a different city.</p>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 3.</span> <input type="text" id="p3a_q3" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about the salary..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: Yes, the salary was excellent.</p>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 4.</span> <input type="text" id="p3a_q4" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about team management..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: No, I didn't manage a team. I was an individual contributor.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">B. A Coworker's Weekend</h4>
+                        <p class="text-sm text-slate-600 mb-3">Complete the text using the correct Simple Past form of the verbs in parentheses.</p>
+                        <div class="bg-slate-50 p-5 rounded-xl border leading-relaxed text-slate-800 text-justify">
+                            Last weekend, I 1. <input type="text" id="p3b_1" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (be) very busy. 
+                            On Saturday, I 2. <input type="text" id="p3b_2" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (wake up) early and 
+                            3. <input type="text" id="p3b_3" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (go) to the supermarket. 
+                            In the afternoon, I 4. <input type="text" id="p3b_4" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (study) for my master's degree. 
+                            My friends 5. <input type="text" id="p3b_5" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (invite) me to a restaurant, 
+                            but I 6. <input type="text" id="p3b_6" class="w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (not/go) 
+                            because I 7. <input type="text" id="p3b_7" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (be) tired.
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">C. Pronunciation Check</h4>
+                        <p class="text-sm text-slate-600 mb-3">Categorize the regular verbs into the correct phonetic columns based on their ending sounds.</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-slate-50 p-4 rounded-xl border">
+                            <script>
+                                const regularVerbsList = ["worked", "played", "wanted", "watched", "needed", "listened", "stopped", "started", "called", "visited"];
+                                regularVerbsList.forEach(v => {
+                                    document.write(`
+                                        <div class="bg-white p-2 border border-slate-200 rounded-lg flex flex-col items-center shadow-sm">
+                                            <span class="font-mono text-xs font-bold text-slate-700 mb-1">${v}</span>
+                                            <select id="p3c_${v}" class="w-full text-xs font-semibold bg-slate-50 border rounded p-1 text-center text-blue-700 outline-none">
+                                                <option value="">...</option>
+                                                <option value="/t/">/t/</option>
+                                                <option value="/d/">/d/</option>
+                                                <option value="/id/">/id/</option>
+                                            </select>
+                                        </div>
+                                    `);
+                                });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between pt-6 mt-auto">
+                        <button type="button" onclick="navigate(2)" class="bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-xl hover:bg-slate-300 transition">Previous</button>
+                        <button type="button" onclick="navigate(4)" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition">Next: Part 4</button>
+                    </div>
+                </div>
+
+                <div id="step-4" class="step-content p-6 md:p-10 space-y-6">
+                    <div class="border-b-2 border-blue-100 pb-2 mb-4">
+                        <h3 class="text-2xl font-black text-slate-800">Part 4: Written Production</h3>
+                        <p class="text-sm text-slate-500">Free Output Expression</p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-4 text-sm text-amber-800">
+                        <strong>Instructions:</strong> Write a coherent paragraph (50-80 words) detailing a memorable day in your past (such as your last vacation, a special birthday celebration, or a short trip). You must successfully use a combination of regular and irregular verbs, forms of 'to be', and at least one structured negative sentence.
+                    </div>
+
+                    <div class="flex-grow flex flex-col space-y-2">
+                        <textarea id="part4-text" oninput="countWords()" class="w-full flex-grow min-h-[250px] p-4 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none text-base leading-relaxed resize-none transition" placeholder="Enter your text here..."></textarea>
+                        <div class="flex justify-end text-sm font-bold text-slate-500">
+                            Word Count: <span id="word-counter" class="text-blue-600 ml-1 mx-1">0</span> words.
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between pt-6 mt-auto">
+                        <button type="button" onclick="navigate(3)" class="bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-xl hover:bg-slate-300 transition">Previous</button>
+                        <button type="button" onclick="submitFinalTest()" class="bg-emerald-600 text-white font-black px-8 py-3 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/30 text-lg uppercase tracking-wide">Submit Exam</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </main>
 
-    <div id="loading-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl border border-gray-100">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900 border-t-transparent mx-auto mb-4"></div>
-            <h4 class="text-lg font-bold text-gray-900 mb-1">Uploading Results</h4>
-            <p class="text-sm text-gray-500">Connecting with Google Spreadsheet Database cloud pipeline...</p>
-        </div>
-    </div>
-
-    <div id="success-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-md flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 text-center shadow-2xl border border-gray-100 scale-95 transition-all duration-300">
-            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce">✓</div>
-            <h3 class="text-2xl font-black text-gray-900 mb-2">Test Successfully Submitted!</h3>
-            <p class="text-sm text-gray-600 mb-5">Your answers have been stored securely. Your academic advisor will evaluate the written production section shortly.</p>
-            <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">
-                <span class="text-xs uppercase font-bold text-slate-400 tracking-wider block">Realtime Objective Core Score</span>
-                <span id="display-points" class="text-3xl font-black text-blue-900">0 pts</span>
-            </div>
-            <p class="text-xs text-red-500 font-medium">You can close this tab safely now.</p>
-        </div>
-    </div>
+    <footer class="text-center py-4 text-xs font-semibold text-slate-400 bg-white border-t border-slate-200">
+        © 2026 Centro Venezolano Americano del Zulia (CEVAZ). All Rights Reserved.
+    </footer>
 
     <script>
-        // Endpoint del API Cloud de Google Apps Script proporcionado por el usuario
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzH90CBxOFdb3Zd5d83KATzyz4iZkYz300smu8Un4U45A84kLW4uMKxG1V3Wsf3Bvt6/exec";
+        // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT EXECUTION URL HERE
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxZCAzPy-x0MWxNKPKmbQclUfSoYxCGvmqGgj9UYylOwwaGCGQh344TYuLoa_Lh_h1A/exec";
 
-        // Parámetros de Seguridad Anti-trampa
         let securityStrikes = 0;
-        const MAXIMUM_ALLOWED_STRIKES = 3;
-        let examSubmittedState = false;
+        let isExamActive = false;
 
-        // Listener de Seguridad Global (Monitoreo de cambio de pestaña o pérdida de foco)
-        window.addEventListener('blur', registerSecurityInfraction);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-                registerSecurityInfraction();
-            }
-        });
-
-        function registerSecurityInfraction() {
-            if (examSubmittedState) return;
-
-            securityStrikes++;
-            const badge = document.getElementById('security-badge');
-            const badgeText = document.getElementById('security-text');
-
-            if (securityStrikes >= MAXIMUM_ALLOWED_STRIKES) {
-                badge.className = "flex items-center gap-2 bg-red-100 border border-red-300 text-red-700 px-3 py-1.5 rounded-full text-xs font-semibold shadow-xs";
-                badgeText.innerText = `EXAM LOCKED • ${securityStrikes} STRIKES`;
-                alert("🚨 SECURITY POLICY VIOLATION: Has excedido el número permitido de salidas del examen. Tus respuestas serán enviadas de forma automática inmediatamente debido a sospecha de copia/búsqueda externa.");
-                executeAutomatedUploadPipeline("ABORTED BY CHEATING");
+        // Strict validation architecture: Only enable corrections inputs if False is explicitly toggled
+        function toggleCorrection(qNum, enable) {
+            const inputField = document.getElementById(`p2_q${qNum}_corr`);
+            if(enable) {
+                inputField.disabled = false;
+                inputField.classList.remove('bg-slate-200');
+                inputField.focus();
             } else {
-                badge.className = "flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-full text-xs font-semibold shadow-xs";
-                badgeText.innerText = `SECURITY WARNING • ${securityStrikes} / 3 STRIKES`;
-                alert(`⚠️ ALERTA DE SEGURIDAD: Has salido de la pestaña del examen. Está prohibido abrir traductores o buscar material externo. Al llegar a 3 bloqueos, el examen se enviará con reprobación automática. Intento: ${securityStrikes}/3.`);
+                inputField.disabled = true;
+                inputField.value = "";
+                inputField.classList.add('bg-slate-200');
             }
         }
 
-        // Contador en tiempo real para la sección escrita
-        function trackWritingMetrics() {
-            const text = document.getElementById('part4-text').value.trim();
-            const wordsCount = text ? text.split(/\s+/).length : 0;
-            document.getElementById('current-words').innerText = wordsCount;
-
-            const badge = document.getElementById('word-count-badge');
-            if (wordsCount >= 50 && wordsCount <= 80) {
-                badge.className = "text-xs font-semibold text-green-600 bg-green-50 border border-green-100 px-2.5 py-1 rounded-md transition-all";
+        // Asynchronous UI Transition Engine with Fade Properties
+        function navigate(toIndex) {
+            const currentActive = document.querySelector('.step-content.active');
+            if (currentActive) {
+                currentActive.classList.add('fade-out-active');
+                setTimeout(() => {
+                    currentActive.classList.remove('active', 'fade-out-active');
+                    const nextActive = document.getElementById(`step-${toIndex}`);
+                    nextActive.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 400); 
             } else {
-                badge.className = "text-xs font-semibold text-red-600 bg-red-50 border border-red-100 px-2.5 py-1 rounded-md transition-all";
+                document.getElementById(`step-${toIndex}`).classList.add('active');
             }
         }
 
-        // Calclulador automático objetivo estructurado (Suma de ítems cerrados evaluables en caliente)
+        function startAssessment() {
+            const sName = document.getElementById('student-name').value.trim();
+            const sId = document.getElementById('student-id').value.trim();
+            const sEmail = document.getElementById('student-email').value.trim();
+            const sBranch = document.getElementById('student-branch').value;
+
+            if(!sName || !sId || !sEmail || !sBranch) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Required Fields',
+                    text: 'Please input all requested student data before initiation.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            isExamActive = true;
+            document.getElementById('security-badge').classList.remove('hidden');
+            navigate(1);
+        }
+
+        function countWords() {
+            const content = document.getElementById('part4-text').value.trim();
+            const totalWords = content ? content.split(/\s+/).length : 0;
+            document.getElementById('word-counter').innerText = totalWords;
+        }
+
+        // MATH SCORING ALGORITHM LOADER (0 - 100 System Architecture)
         function calculateRealtimeGrade() {
-            let runningSum = 0;
+            let totalComputedPoints = 0;
 
-            // Part 1: Listening (Preguntas de opción múltiple 1, 2, 3)
-            if (document.querySelector('input[name="p1_q1"]:checked')?.value === 'b') runningSum += 5;
-            if (document.querySelector('input[name="p1_q2"]:checked')?.value === 'b') runningSum += 5;
-            if (document.querySelector('input[name="p1_q3"]:checked')?.value === 'a') runningSum += 5;
+            // PART 1 EVALUATION (Sarah's Vacation) -> 4 points each (Total 20)
+            if (document.querySelector('input[name="p1_q1"]:checked')?.value === "b") totalComputedPoints += 4; // mountains
+            if (document.querySelector('input[name="p1_q2"]:checked')?.value === "b") totalComputedPoints += 4; // family
+            if (document.querySelector('input[name="p1_q3"]:checked')?.value === "a") totalComputedPoints += 4; // rained
+            
+            const p1_q4_ans = document.getElementById('p1_q4').value.trim().toLowerCase();
+            if (p1_q4_ans.includes("hike") || p1_q4_ans.includes("swim") || p1_q4_ans.includes("board game") || p1_q4_ans.includes("stayed")) totalComputedPoints += 4;
+            
+            const p1_q5_ans = document.getElementById('p1_q5').value.trim().toLowerCase();
+            if (p1_q5_ans.includes("week") || p1_q5_ans.includes("7 days")) totalComputedPoints += 4;
 
-            // Part 2: Reading (True/False checks)
-            if (document.querySelector('input[name="p2_q1_val"]:checked')?.value === 'F') runningSum += 3;
-            if (document.querySelector('input[name="p2_q2_val"]:checked')?.value === 'F') runningSum += 3;
-            if (document.querySelector('input[name="p2_q3_val"]:checked')?.value === 'T') runningSum += 3;
-            if (document.querySelector('input[name="p2_q4_val"]:checked')?.value === 'F') runningSum += 3;
-            if (document.querySelector('input[name="p2_q5_val"]:checked')?.value === 'T') runningSum += 3;
+            // PART 2 EVALUATION (Carlos Bogota Trip) -> 4 points each (Total 20)
+            // Q1: False (Wednesday morning)
+            if (document.querySelector('input[name="p2_q1_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c1 = document.getElementById('p2_q1_corr').value.trim().toLowerCase();
+                if (c1.includes("morning") || c1.includes("wednesday morning")) totalComputedPoints += 2;
+            }
+            // Q2: False (Didn't have time)
+            if (document.querySelector('input[name="p2_q2_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c2 = document.getElementById('p2_q2_corr').value.trim().toLowerCase();
+                if (c2.includes("didn't") || c2.includes("no time") || c2.includes("eat lunch")) totalComputedPoints += 2;
+            }
+            // Q3: True
+            if (document.querySelector('input[name="p2_q3_val"]:checked')?.value === "T") totalComputedPoints += 4;
+            // Q4: False (Visited Monserrate)
+            if (document.querySelector('input[name="p2_q4_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c4 = document.getElementById('p2_q4_corr').value.trim().toLowerCase();
+                if (c4.includes("monserrate") || c4.includes("visited")) totalComputedPoints += 2;
+            }
+            // Q5: True
+            if (document.querySelector('input[name="p2_q5_val"]:checked')?.value === "T") totalComputedPoints += 4;
 
-            // Part 3B: Blanks grammar matching (Filtro normalizado de minúsculas)
-            if (document.getElementById('p3b_1').value.trim().toLowerCase() === 'was') runningSum += 3;
-            if (document.getElementById('p3b_2').value.trim().toLowerCase() === 'woke up') runningSum += 3;
-            if (document.getElementById('p3b_3').value.trim().toLowerCase() === 'went') runningSum += 3;
-            if (document.getElementById('p3b_4').value.trim().toLowerCase() === 'studied') runningSum += 3;
-            if (document.getElementById('p3b_5').value.trim().toLowerCase() === 'invited') runningSum += 3;
-            if (document.getElementById('p3b_6').value.trim().toLowerCase() === 'didn\'t go' || document.getElementById('p3b_6').value.trim().toLowerCase() === 'did not go') runningSum += 3;
-            if (document.getElementById('p3b_7').value.trim().toLowerCase() === 'was') runningSum += 3;
+            // PART 3A EVALUATION (Information Gap Microsoft Questions) -> 5 points each (Total 20)
+            const p3a1 = document.getElementById('p3a_q1').value.trim().toLowerCase();
+            if (p3a1.includes("where did you work") || p3a1.includes("how long did you work")) totalComputedPoints += 5;
+            
+            const p3a2 = document.getElementById('p3a_q2').value.trim().toLowerCase();
+            if (p3a2.includes("why did you leave") || p3a2.includes("why did you change")) totalComputedPoints += 5;
+            
+            const p3a3 = document.getElementById('p3a_q3').value.trim().toLowerCase();
+            if (p3a3.includes("was the salary") || p3a3.includes("was your salary")) totalComputedPoints += 5;
+            
+            const p3a4 = document.getElementById('p3a_q4').value.trim().toLowerCase();
+            if (p3a4.includes("did you manage") || p3a4.includes("were you a manager")) totalComputedPoints += 5;
 
-            // Part 3C: Pronunciation columns
-            if (document.getElementById('p3c_worked').value === '/t/') runningSum += 2;
-            if (document.getElementById('p3c_played').value === '/d/') runningSum += 2;
-            if (document.getElementById('p3c_wanted').value === '/id/') runningSum += 2;
-            if (document.getElementById('p3c_watched').value === '/t/') runningSum += 2;
-            if (document.getElementById('p3c_needed').value === '/id/') runningSum += 2;
-            if (document.getElementById('p3c_listened').value === '/d/') runningSum += 2;
-            if (document.getElementById('p3c_stopped').value === '/t/') runningSum += 2;
-            if (document.getElementById('p3c_started').value === '/id/') runningSum += 2;
-            if (document.getElementById('p3c_called').value === '/d/') runningSum += 2;
-            if (document.getElementById('p3c_visited').value === '/id/') runningSum += 2;
+            // PART 3B EVALUATION (Coworker's Blanks) -> 2 points each (Total 14)
+            if (document.getElementById('p3b_1').value.trim().toLowerCase() === "was") totalComputedPoints += 2;
+            if (document.getElementById('p3b_2').value.trim().toLowerCase() === "woke up") totalComputedPoints += 2;
+            if (document.getElementById('p3b_3').value.trim().toLowerCase() === "went") totalComputedPoints += 2;
+            if (document.getElementById('p3b_4').value.trim().toLowerCase() === "studied") totalComputedPoints += 2;
+            if (document.getElementById('p3b_5').value.trim().toLowerCase() === "invited") totalComputedPoints += 2;
+            const b6 = document.getElementById('p3b_6').value.trim().toLowerCase();
+            if (b6 === "didn't go" || b6 === "did not go") totalComputedPoints += 2;
+            if (document.getElementById('p3b_7').value.trim().toLowerCase() === "was") totalComputedPoints += 2;
 
-            return runningSum; 
+            // PART 3C EVALUATION (Phonetics Classification Matrix) -> 1.6 points each (Total 16)
+            const phoneticAnswerKey = {
+                worked: "/t/", watched: "/t/", stopped: "/t/",
+                played: "/d/", listened: "/d/", called: "/d/",
+                wanted: "/id/", needed: "/id/", started: "/id/", visited: "/id/"
+            };
+            for (let verbItem in phoneticAnswerKey) {
+                if (document.getElementById(`p3c_${verbItem}`).value === phoneticAnswerKey[verbItem]) {
+                    totalComputedPoints += 1.6;
+                }
+            }
+
+            // PART 4 EVALUATION (Written Production Framework Execution) -> Total 10
+            const writingText = document.getElementById('part4-text').value.trim();
+            const actualWordCount = writingText ? writingText.split(/\s+/).length : 0;
+            if (actualWordCount >= 50 && actualWordCount <= 80) {
+                totalComputedPoints += 10;
+            } else if (actualWordCount > 0) {
+                totalComputedPoints += 4; // Partial point verification parameters
+            }
+
+            return Math.round(totalComputedPoints);
         }
 
-        function retrieveScoreEmoji(score) {
-            if (score >= 65) return "🏆 EXCELLENT PERFORMANCE";
-            if (score >= 45) return "⚡ PASSING GRADE";
-            return "📉 NEEDS REINFORCEMENT";
+        // SMART ICON ASSIGNMENT ENGINE LOGIC FOR CELLS
+        function retrieveScoreEmoji(calculatedScore) {
+            if (calculatedScore >= 90) return "👑 [EXCELLENT]";
+            if (calculatedScore >= 75) return "🟢 [PASSED]";
+            if (calculatedScore >= 50) return "🟡 [AVERAGE]";
+            return "🔴 [FAILED]";
         }
 
-        // Generación del paquete estructurado JSON para el Sheet
         function generatePayloadPackage(statusValue) {
             const definitiveGrade = calculateRealtimeGrade();
             const writingTextContent = document.getElementById('part4-text').value.trim();
             const totalWordsLength = writingTextContent ? writingTextContent.split(/\s+/).length : 0;
             
-            // Verificación del rango requerido de palabras
-            const needsReviewIcon = (totalWordsLength < 50 || totalWordsLength > 80) ? "⚠️ MANUAL REVIEW NEEDED (OUT OF RANGE)" : "✅ COMPLIANT WORD COUNT";
+            // Manual check flag icon mapping
+            const needsReviewIcon = (totalWordsLength < 50 || totalWordsLength > 80) ? "⚠️ MANUAL REVIEW NEEDED" : "✅ COMPLIANT WORD COUNT";
 
             return {
-                // Información Institucional
                 fullName: document.getElementById('student-name').value.toUpperCase(),
                 cedula: document.getElementById('student-id').value,
                 email: document.getElementById('student-email').value,
@@ -559,99 +511,97 @@
                 score: definitiveGrade,
                 scoreIcon: retrieveScoreEmoji(definitiveGrade),
                 reviewStatus: needsReviewIcon,
-                part4_text: writingTextContent,
-
-                // Respuestas Part 1 (Listening)
-                p1_q1: document.querySelector('input[name="p1_q1"]:checked')?.value || "",
-                p1_q2: document.querySelector('input[name="p1_q2"]:checked')?.value || "",
-                p1_q3: document.querySelector('input[name="p1_q3"]:checked')?.value || "",
-                p1_q4: document.getElementById('p1_q4').value.trim(),
-                p1_q5: document.getElementById('p1_q5').value.trim(),
-
-                // Respuestas Part 2 (Reading - True/False y Correcciones)
-                p2_q1_val: document.querySelector('input[name="p2_q1_val"]:checked')?.value || "",
-                p2_q1_corr: document.getElementById('p2_q1_corr').value.trim(),
-                p2_q2_val: document.querySelector('input[name="p2_q2_val"]:checked')?.value || "",
-                p2_q2_corr: document.getElementById('p2_q2_corr').value.trim(),
-                p2_q3_val: document.querySelector('input[name="p2_q3_val"]:checked')?.value || "",
-                p2_q3_corr: document.getElementById('p2_q3_corr').value.trim(),
-                p2_q4_val: document.querySelector('input[name="p2_q4_val"]:checked')?.value || "",
-                p2_q4_corr: document.getElementById('p2_q4_corr').value.trim(),
-                p2_q5_val: document.querySelector('input[name="p2_q5_val"]:checked')?.value || "",
-                p2_q5_corr: document.getElementById('p2_q5_corr').value.trim(),
-
-                // Respuestas Part 3A (Information Gap)
-                p3a_q1: document.getElementById('p3a_q1').value.trim(),
-                p3a_q2: document.getElementById('p3a_q2').value.trim(),
-                p3a_q3: document.getElementById('p3a_q3').value.trim(),
-                p3a_q4: document.getElementById('p3a_q4').value.trim(),
-
-                // Respuestas Part 3B (Blanks)
-                p3b_1: document.getElementById('p3b_1').value.trim(),
-                p3b_2: document.getElementById('p3b_2').value.trim(),
-                p3b_3: document.getElementById('p3b_3').value.trim(),
-                p3b_4: document.getElementById('p3b_4').value.trim(),
-                p3b_5: document.getElementById('p3b_5').value.trim(),
-                p3b_6: document.getElementById('p3b_6').value.trim(),
-                p3b_7: document.getElementById('p3b_7').value.trim(),
-
-                // Respuestas Part 3C (Pronunciation Matrix)
-                p3c_worked: document.getElementById('p3c_worked').value,
-                p3c_played: document.getElementById('p3c_played').value,
-                p3c_wanted: document.getElementById('p3c_wanted').value,
-                p3c_watched: document.getElementById('p3c_watched').value,
-                p3c_needed: document.getElementById('p3c_needed').value,
-                p3c_listened: document.getElementById('p3c_listened').value,
-                p3c_stopped: document.getElementById('p3c_stopped').value,
-                p3c_started: document.getElementById('p3c_started').value,
-                p3c_called: document.getElementById('p3c_called').value,
-                p3c_visited: document.getElementById('p3c_visited').value
+                part4_text: writingTextContent
             };
         }
 
-        function handleFormSubmission(event) {
-            event.preventDefault();
-            executeAutomatedUploadPipeline("COMPLETED");
-        }
-
-        // Tubería de envío asíncrono vía Fetch
-        function executeAutomatedUploadPipeline(statusValue) {
-            if (examSubmittedState) return;
-            examSubmittedState = true;
-
-            // Desactivar listeners de trampa para evitar alertas en bucle al finalizar
-            window.removeEventListener('blur', registerSecurityInfraction);
-
-            document.getElementById('loading-modal').classList.remove('hidden');
-            const dataPayload = generatePayloadPackage(statusValue);
+        function sendDatabaseRow(packageData) {
+            Swal.fire({
+                title: 'Transmitting Secure Data...',
+                html: 'Your processing score is being registered inside the spreadsheet database. <b>Do not close this window</b>.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
 
             fetch(WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors", // Requerido para saltar barreras estrictas de preflight del navegador en Google Script
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-                body: JSON.stringify(dataPayload)
+                mode: "no-cors", 
+                cache: "no-cache",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(packageData)
             })
             .then(() => {
-                displaySuccessFinalScreen(dataPayload.score);
+                Swal.fire({
+                    title: 'Assessment Concluded',
+                    text: 'Your grade, answers, data, and performance icons have been written securely into Google Sheets.',
+                    icon: 'success',
+                    confirmButtonText: 'Finish Test',
+                    allowOutsideClick: false
+                }).then(() => {
+                    location.reload(); 
+                });
             })
-            .catch((err) => {
-                console.error("Falló la comunicación HTTP primaria, reintentando pipeline transaccional...", err);
-                // Reintento silencioso secundario de respaldo
-                setTimeout(() => {
-                    displaySuccessFinalScreen(dataPayload.score);
-                }, 1500);
+            .catch(() => {
+                Swal.fire('Database Error', 'A submission loss occurred. Please contact your classroom administrator immediately.', 'error');
             });
         }
 
-        function displaySuccessFinalScreen(calculatedPoints) {
-            document.getElementById('loading-modal').classList.add('hidden');
-            document.getElementById('display-points').innerText = `${calculatedPoints} / 73 pts`;
-            document.getElementById('success-modal').classList.remove('hidden');
+        // ANTI-CHEAT ENGINE INFRASTRUCTURE (3 STRIKES LIMIT)
+        function logProctoringStrike() {
+            if (!isExamActive) return;
+            securityStrikes++;
             
-            // Bloqueo total de la interfaz visual post-entrega
-            document.getElementById('quiz-form').innerHTML = "<div class='text-center py-12 font-bold text-gray-400 font-mono'>TEST BUFFER DISPOSED FOR SECURITY</div>";
+            if (securityStrikes >= 3) {
+                isExamActive = false;
+                executeAutoEjection();
+            } else {
+                Swal.fire({
+                    title: 'SECURITY VIOLATION LOGGED!',
+                    text: `You left the secure test screen viewport. Strike recorded: (${securityStrikes}/3). Reaching 3 strikes will force auto-submission.`,
+                    icon: 'error',
+                    confirmButtonColor: '#e11d48',
+                    confirmButtonText: 'Return to Assessment Frame',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => { if (document.hidden) logProctoringStrike(); });
+        window.addEventListener('blur', () => { logProctoringStrike(); });
+
+        function submitFinalTest() {
+            Swal.fire({
+                title: 'Submit Assessment Package?',
+                text: "Review your inputs. Once sent, scoring rows are locked and finalized.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#475569',
+                confirmButtonText: 'Yes, finalize transmission',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    isExamActive = false; 
+                    const packageObj = generatePayloadPackage("COMPLETED");
+                    sendDatabaseRow(packageObj);
+                }
+            });
+        }
+
+        function executeAutoEjection() {
+            Swal.fire({
+                title: 'EXAM LOCKED & ABORTED',
+                text: 'The security log recorded 3 navigation focus shifts. Your form is forced to auto-submit as a locked event.',
+                icon: 'error',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                confirmButtonText: 'Transmit Locked File'
+            }).then(() => {
+                const packageObj = generatePayloadPackage("CANCELLED_BY_STRIKES");
+                sendDatabaseRow(packageObj);
+            });
         }
     </script>
 </body>
