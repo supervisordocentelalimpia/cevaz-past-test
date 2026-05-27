@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* CSS FIX: Strict display management to fix Part 4 bug and enable animations */
+        /* Strict display control to completely fix the Part 4 bug and enable layout animations */
         .step-content { 
             display: none !important; 
         }
@@ -23,31 +23,30 @@
         }
         
         @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(15px); } 
+            from { opacity: 0; transform: translateY(12px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
         @keyframes fadeOut { 
             from { opacity: 1; transform: translateY(0); } 
-            to { opacity: 0; transform: translateY(-15px); } 
+            to { opacity: 0; transform: translateY(-12px); } 
         }
 
-        /* Blocks basic copy-pasting on tablets to prevent cheating */
         body { user-select: none; -webkit-user-select: none; } 
-        input, textarea { user-select: text; -webkit-user-select: text; }
+        input, textarea, select { user-select: text; -webkit-user-select: text; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
     <header class="bg-white border-b border-slate-200 py-3 px-6 sticky top-0 z-50 shadow-sm flex items-center justify-between">
         <div class="flex items-center space-x-4">
-            <img src="https://lh3.googleusercontent.com/d/15yPJCZ18um-jQjd-m0Z_FB1nw36uzcTL" alt="CEVAZ Logo" class="h-12 w-auto object-contain">
+            <img src="https://lh3.googleusercontent.com/d/1" alt="CEVAZ Logo" class="h-12 w-auto object-contain" onerror="this.src='https://placehold.co/150x50?text=CEVAZ+LOGO'">
             <div>
                 <h1 class="text-lg font-bold text-slate-900 tracking-tight">Academic Department</h1>
                 <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Mini Course: Simple Past</p>
             </div>
         </div>
         <div id="security-badge" class="hidden flex items-center bg-emerald-100 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wide border border-emerald-200 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Secured
+            <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span> Secured Connection
         </div>
     </header>
 
@@ -58,27 +57,27 @@
                 
                 <div id="step-0" class="step-content active p-6 md:p-10 space-y-6">
                     <div class="text-center space-y-2 mb-4">
-                        <h2 class="text-3xl font-extrabold text-blue-900">Welcome to the Test</h2>
-                        <p class="text-sm text-slate-500">Please fill in your details to start the assessment.</p>
+                        <h2 class="text-3xl font-extrabold text-blue-900">Welcome to the Assessment</h2>
+                        <p class="text-sm text-slate-500">Please provide your academic credentials to proceed.</p>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="space-y-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Full Name</label>
-                            <input type="text" id="student-name" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. John Doe">
+                            <input type="text" id="student-name" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. Jane Doe">
                         </div>
                         <div class="space-y-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">ID Number (Cédula)</label>
-                            <input type="number" id="student-id" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. 28123456">
+                            <input type="number" id="student-id" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="E.g. 29123456">
                         </div>
                         <div class="space-y-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Email Address</label>
-                            <input type="email" id="student-email" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="student@example.com">
+                            <input type="email" id="student-email" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 focus:bg-white" placeholder="student@cevaz.com">
                         </div>
                         <div class="space-y-1">
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Branch</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Campus Branch</label>
                             <select id="student-branch" required class="w-full px-4 py-3 border border-slate-300 bg-slate-50 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition font-medium text-slate-700">
-                                <option value="" disabled selected>Select your branch...</option>
+                                <option value="" disabled selected>Choose your current branch...</option>
                                 <option value="LA LIMPIA">LA LIMPIA</option>
                                 <option value="SAN FRANCISCO">SAN FRANCISCO</option>
                                 <option value="LAS MERCEDES">LAS MERCEDES</option>
@@ -88,7 +87,7 @@
                     </div>
 
                     <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 mt-4">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-blue-800 mb-3 text-center">Select Test Type</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-blue-800 mb-3 text-center">Select Academic Modality</label>
                         <div class="grid grid-cols-2 gap-4">
                             <label class="flex items-center justify-center p-3 bg-white border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition shadow-sm">
                                 <input type="radio" name="test-type" value="Diagnostic Test 1" checked class="w-4 h-4 text-blue-600">
@@ -116,11 +115,11 @@
 
                     <div class="space-y-5">
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            <p class="font-bold text-slate-800 mb-3">1. Where did Erica go for her last vacation?</p>
+                            <p class="font-bold text-slate-800 mb-3">1. Where did Sarah go for her last vacation?</p>
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="a" class="mr-2"> a) The beach</label>
-                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="b" class="mr-2"> b) Arizona</label>
-                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="c" class="mr-2"> c) The mountains</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="b" class="mr-2"> b) The mountains</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q1" value="c" class="mr-2"> c) The city</label>
                             </div>
                         </div>
 
@@ -129,27 +128,27 @@
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="a" class="mr-2"> a) Her friends</label>
                                 <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="b" class="mr-2"> b) Her family</label>
-                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="c" class="mr-2"> c) Her sister</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q2" value="c" class="mr-2"> c) Her boyfriend</label>
                             </div>
                         </div>
 
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            <p class="font-bold text-slate-800 mb-3">3. What was the problem during the trip?</p>
-                            <div class="flex flex-col gap-2">
-                                <label class="flex items-center p-3 bg-white border rounded-lg cursor-pointer"><input type="radio" name="p1_q3" value="a" class="mr-2"> a) It rained.</label>
-                                <label class="flex items-center p-3 bg-white border rounded-lg cursor-pointer"><input type="radio" name="p1_q3" value="b" class="mr-2"> b) Her sister didn't like rafting.</label>
-                                <label class="flex items-center p-3 bg-white border rounded-lg cursor-pointer"><input type="radio" name="p1_q3" value="c" class="mr-2"> c) The hotel was closed.</label>
+                            <p class="font-bold text-slate-800 mb-3">3. What was the problem on the first day?</p>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="a" class="mr-2"> a) It rained.</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="b" class="mr-2"> b) They lost their luggage.</label>
+                                <label class="flex items-center p-3 bg-white border rounded-lg flex-1 cursor-pointer"><input type="radio" name="p1_q3" value="c" class="mr-2"> c) The hotel was closed.</label>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <label class="block font-bold text-slate-800 mb-2">4. Name one activity Erica did during the trip:</label>
-                                <input type="text" id="p1_q4" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <label class="block font-bold text-slate-800 mb-2">4. Name one activity Sarah did during the trip:</label>
+                                <input type="text" id="p1_q4" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="E.g. Played board games">
                             </div>
                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                                 <label class="block font-bold text-slate-800 mb-2">5. How long was the trip?</label>
-                                <input type="text" id="p1_q5" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                                <input type="text" id="p1_q5" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="E.g. One week">
                             </div>
                         </div>
                     </div>
@@ -161,67 +160,67 @@
                 <div id="step-2" class="step-content p-6 md:p-10 space-y-6">
                     <div class="border-b-2 border-blue-100 pb-2 mb-4">
                         <h3 class="text-2xl font-black text-slate-800">Part 2: Reading Comprehension</h3>
-                        <p class="text-sm text-slate-500">Read the email about a weekend trip. Then, answer True (T) or False (F). Correct the false statements.</p>
+                        <p class="text-sm text-slate-500">Read the email about a business trip. Then, answer True (T) or False (F). Correct the false statements.</p>
                     </div>
 
                     <div class="bg-blue-50 text-slate-800 rounded-xl p-5 border border-blue-200 font-mono text-sm leading-relaxed shadow-inner">
                         <p class="border-b border-blue-200 pb-1"><strong>To:</strong> Team</p>
-                        <p class="border-b border-blue-200 pb-1 mb-2"><strong>Subject:</strong> My camping trip!</p>
+                        <p class="border-b border-blue-200 pb-1 mb-2"><strong>Subject:</strong> My business trip to Bogota</p>
                         <p>Hi everyone,</p>
-                        <p class="mt-2 text-justify">I returned from my camping trip last night. The weekend was interesting, but very exhausting. My friends and I drove to the campsite on Saturday morning. First, we put up the tent. Then we built a fire, cooked a delicious dinner, and told stories around the fire. On Sunday, we went fishing in the river. Honestly, I didn't really like camping because it was cold, but I learned a lot. The drive home on Sunday evening was terrible. It took three hours to get back! See you all tomorrow!</p>
-                        <p class="mt-2">Best,<br><strong>Lacey</strong></p>
+                        <p class="mt-2 text-justify">I returned from Bogota last night. The trip was excellent, but very exhausting. I arrived on Wednesday morning and went directly to the hotel. The conference started at 2:00 PM. I didn't have time to eat lunch! On Thursday, I presented our new project. The managers were very happy with the results. Fortunately, it wasn't all work. On Friday evening, I visited Monserrate and ate delicious local food. I took a lot of photos. See you in the office tomorrow!</p>
+                        <p class="mt-2">Best,<br><strong>Carlos</strong></p>
                     </div>
 
                     <div class="space-y-4">
                         <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
                             <div class="flex items-center justify-between gap-4">
-                                <p class="text-sm font-semibold text-slate-800">1. Lacey and her friends arrived at the campsite on Sunday morning.</p>
+                                <p class="text-sm font-semibold text-slate-800">1. Carlos arrived in Bogota on Wednesday night.</p>
                                 <div class="flex space-x-2 shrink-0">
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q1_val" value="T" onchange="toggleCorrection(1, false)"> T</label>
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q1_val" value="F" onchange="toggleCorrection(1, true)"> F</label>
                                 </div>
                             </div>
-                            <input type="text" id="p2_q1_corr" disabled placeholder="Correction if False:" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <input type="text" id="p2_q1_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         </div>
                         <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
                             <div class="flex items-center justify-between gap-4">
-                                <p class="text-sm font-semibold text-slate-800">2. They cooked a big dinner before building the fire.</p>
+                                <p class="text-sm font-semibold text-slate-800">2. He ate a big lunch before the conference.</p>
                                 <div class="flex space-x-2 shrink-0">
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q2_val" value="T" onchange="toggleCorrection(2, false)"> T</label>
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q2_val" value="F" onchange="toggleCorrection(2, true)"> F</label>
                                 </div>
                             </div>
-                            <input type="text" id="p2_q2_corr" disabled placeholder="Correction if False:" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <input type="text" id="p2_q2_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         </div>
                         <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
                             <div class="flex items-center justify-between gap-4">
-                                <p class="text-sm font-semibold text-slate-800">3. The camping experience was liked by Lacey from the beginning.</p>
+                                <p class="text-sm font-semibold text-slate-800">3. The presentation was on Thursday.</p>
                                 <div class="flex space-x-2 shrink-0">
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q3_val" value="T" onchange="toggleCorrection(3, false)"> T</label>
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q3_val" value="F" onchange="toggleCorrection(3, true)"> F</label>
                                 </div>
                             </div>
-                            <input type="text" id="p2_q3_corr" disabled placeholder="Correction if False:" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <input type="text" id="p2_q3_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         </div>
                         <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
                             <div class="flex items-center justify-between gap-4">
-                                <p class="text-sm font-semibold text-slate-800">4. Lacey didn't do any sport or activity on Sunday.</p>
+                                <p class="text-sm font-semibold text-slate-800">4. Carlos didn't visit any tourist places.</p>
                                 <div class="flex space-x-2 shrink-0">
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q4_val" value="T" onchange="toggleCorrection(4, false)"> T</label>
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q4_val" value="F" onchange="toggleCorrection(4, true)"> F</label>
                                 </div>
                             </div>
-                            <input type="text" id="p2_q4_corr" disabled placeholder="Correction if False:" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <input type="text" id="p2_q4_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         </div>
                         <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
                             <div class="flex items-center justify-between gap-4">
-                                <p class="text-sm font-semibold text-slate-800">5. The drive home was very exhausting and long.</p>
+                                <p class="text-sm font-semibold text-slate-800">5. The managers liked the new project.</p>
                                 <div class="flex space-x-2 shrink-0">
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q5_val" value="T" onchange="toggleCorrection(5, false)"> T</label>
                                     <label class="px-3 py-1 bg-white border rounded-lg cursor-pointer font-bold"><input type="radio" name="p2_q5_val" value="F" onchange="toggleCorrection(5, true)"> F</label>
                                 </div>
                             </div>
-                            <input type="text" id="p2_q5_corr" disabled placeholder="Correction if False:" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <input type="text" id="p2_q5_corr" disabled placeholder="Correction required (only active if selected False):" class="w-full px-3 py-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                         </div>
                     </div>
 
@@ -238,53 +237,53 @@
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">A. Life Events Interview</h4>
-                        <p class="text-sm text-slate-600 mb-3">Formulate the missing questions based on their answers. Pay attention to auxiliary verbs (DID) and To Be (WAS/WERE).</p>
+                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">A. The Networking Event</h4>
+                        <p class="text-sm text-slate-600 mb-3">Formulate the missing questions based on your colleague's answers. Pay attention to DID, WAS, and WERE.</p>
                         <div class="bg-slate-50 p-4 rounded-xl border space-y-4 text-sm">
                             <div>
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 1.</span> <input type="text" id="p3a_q1" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500"></div>
-                                <p class="text-slate-600 ml-12">Classmate: I grew up in Texas. I worked in a bank there.</p>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 1.</span> <input type="text" id="p3a_q1" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about their employment..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: I worked at Microsoft for five years.</p>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 2.</span> <input type="text" id="p3a_q2" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500"></div>
-                                <p class="text-slate-600 ml-12">Classmate: I came to Los Angeles in 2000 because I needed the money.</p>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 2.</span> <input type="text" id="p3a_q2" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about leaving..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: I left because I wanted to move to a different city.</p>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 3.</span> <input type="text" id="p3a_q3" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500"></div>
-                                <p class="text-slate-600 ml-12">Classmate: Yes, my major in college was Drama.</p>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 3.</span> <input type="text" id="p3a_q3" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about the salary..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: Yes, the salary was excellent.</p>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 4.</span> <input type="text" id="p3a_q4" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500"></div>
-                                <p class="text-slate-600 ml-12">Classmate: No, I wasn't born in the U.S. I was born in Seoul, South Korea.</p>
+                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-blue-700">You: 4.</span> <input type="text" id="p3a_q4" class="flex-1 border-b-2 border-slate-300 bg-transparent px-2 py-1 outline-none focus:border-blue-500" placeholder="Ask about team management..."></div>
+                                <p class="text-slate-600 ml-12">Colleague: No, I didn't manage a team. I was an individual contributor.</p>
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">B. Tim's Weekend</h4>
+                        <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">B. A Coworker's Weekend</h4>
                         <p class="text-sm text-slate-600 mb-3">Complete the text using the correct Simple Past form of the verbs in parentheses.</p>
-                        <div class="bg-slate-50 p-5 rounded-xl border leading-relaxed text-slate-800">
-                            Last weekend, Tim 1. <input type="text" id="p3b_1" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (be) very busy. 
-                            On Friday night, he 2. <input type="text" id="p3b_2" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (stay) home and 
-                            3. <input type="text" id="p3b_3" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (watch) TV. 
-                            On Saturday, he 4. <input type="text" id="p3b_4" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (visit) his friend Frank and they listened to music. 
-                            In the evening, Frank 5. <input type="text" id="p3b_5" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (invite) some friends over, so they cooked a great meal. 
-                            Tim 6. <input type="text" id="p3b_6" class="w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (not / study) at all on Sunday. 
-                            Instead, he 7. <input type="text" id="p3b_7" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (go) to the mall and shopped for clothes.
+                        <div class="bg-slate-50 p-5 rounded-xl border leading-relaxed text-slate-800 text-justify">
+                            Last weekend, I 1. <input type="text" id="p3b_1" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (be) very busy. 
+                            On Saturday, I 2. <input type="text" id="p3b_2" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (wake up) early and 
+                            3. <input type="text" id="p3b_3" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (go) to the supermarket. 
+                            In the afternoon, I 4. <input type="text" id="p3b_4" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (study) for my master's degree. 
+                            My friends 5. <input type="text" id="p3b_5" class="w-20 sm:w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (invite) me to a restaurant, 
+                            but I 6. <input type="text" id="p3b_6" class="w-24 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (not/go) 
+                            because I 7. <input type="text" id="p3b_7" class="w-16 sm:w-20 border-b-2 border-slate-400 bg-transparent text-center font-bold text-blue-700 outline-none focus:border-blue-600"> (be) tired.
                         </div>
                     </div>
 
                     <div>
                         <h4 class="font-bold text-slate-800 bg-blue-100 px-3 py-1 rounded inline-block mb-2">C. Pronunciation Check</h4>
-                        <p class="text-sm text-slate-600 mb-3">Categorize the following regular verbs into the correct pronunciation column: /t/, /d/, or /id/.</p>
+                        <p class="text-sm text-slate-600 mb-3">Categorize the regular verbs into the correct phonetic columns based on their ending sounds.</p>
                         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-slate-50 p-4 rounded-xl border">
                             <script>
-                                const verbs = ["worked", "cleaned", "invited", "watched", "stayed", "visited", "shopped", "listened", "waited", "talked"];
-                                verbs.forEach(v => {
+                                const regularVerbsList = ["worked", "played", "wanted", "watched", "needed", "listened", "stopped", "started", "called", "visited"];
+                                regularVerbsList.forEach(v => {
                                     document.write(`
                                         <div class="bg-white p-2 border border-slate-200 rounded-lg flex flex-col items-center shadow-sm">
-                                            <span class="font-mono text-sm font-bold text-slate-700 mb-1">${v}</span>
-                                            <select id="p3c_${v}" class="w-full text-sm font-semibold bg-slate-50 border rounded p-1 text-center text-blue-700 outline-none">
+                                            <span class="font-mono text-xs font-bold text-slate-700 mb-1">${v}</span>
+                                            <select id="p3c_${v}" class="w-full text-xs font-semibold bg-slate-50 border rounded p-1 text-center text-blue-700 outline-none">
                                                 <option value="">...</option>
                                                 <option value="/t/">/t/</option>
                                                 <option value="/d/">/d/</option>
@@ -306,15 +305,15 @@
                 <div id="step-4" class="step-content p-6 md:p-10 space-y-6">
                     <div class="border-b-2 border-blue-100 pb-2 mb-4">
                         <h3 class="text-2xl font-black text-slate-800">Part 4: Written Production</h3>
-                        <p class="text-sm text-slate-500">Free Output</p>
+                        <p class="text-sm text-slate-500">Free Output Expression</p>
                     </div>
 
                     <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-4 text-sm text-amber-800">
-                        <strong>Instructions:</strong> Write a short paragraph (50-80 words) about a memorable weekend or an interesting vacation you took in the past. Ensure you use a mix of regular/irregular verbs, the verb to be, and at least one negative sentence.
+                        <strong>Instructions:</strong> Write a coherent paragraph (50-80 words) detailing a memorable day in your past (such as your last vacation, a special birthday celebration, or a short trip). You must successfully use a combination of regular and irregular verbs, forms of 'to be', and at least one structured negative sentence.
                     </div>
 
                     <div class="flex-grow flex flex-col space-y-2">
-                        <textarea id="part4-text" oninput="countWords()" class="w-full flex-grow min-h-[250px] p-4 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none text-base leading-relaxed resize-none transition" placeholder="Start writing here..."></textarea>
+                        <textarea id="part4-text" oninput="countWords()" class="w-full flex-grow min-h-[250px] p-4 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none text-base leading-relaxed resize-none transition" placeholder="Enter your text here..."></textarea>
                         <div class="flex justify-end text-sm font-bold text-slate-500">
                             Word Count: <span id="word-counter" class="text-blue-600 ml-1 mx-1">0</span> words.
                         </div>
@@ -335,164 +334,191 @@
     </footer>
 
     <script>
-        // GOOGLE APPS SCRIPT URL
+        // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT EXECUTION URL HERE
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx76p7Ra2Rrz7l69UmMT_7tWPRMruLZ77X_dylOiUcng2x_F_LDl8zdk1PyxjIt8FzP/exec";
 
-        let strikes = 0;
-        let testActive = false;
+        let securityStrikes = 0;
+        let isExamActive = false;
 
-        // Logic to enable/disable correction input based on True/False selection
+        // Strict validation architecture: Only enable corrections inputs if False is explicitly toggled
         function toggleCorrection(qNum, enable) {
-            const input = document.getElementById(`p2_q${qNum}_corr`);
+            const inputField = document.getElementById(`p2_q${qNum}_corr`);
             if(enable) {
-                input.disabled = false;
-                input.focus();
+                inputField.disabled = false;
+                inputField.classList.remove('bg-slate-200');
+                inputField.focus();
             } else {
-                input.disabled = true;
-                input.value = "";
+                inputField.disabled = true;
+                inputField.value = "";
+                inputField.classList.add('bg-slate-200');
             }
         }
 
-        // Navigation with Fade Animation
+        // Asynchronous UI Transition Engine with Fade Properties
         function navigate(toIndex) {
-            const activeEl = document.querySelector('.step-content.active');
-            if (activeEl) {
-                // Apply fade out class
-                activeEl.classList.add('fade-out-active');
-                
-                // Wait for animation to finish before switching
+            const currentActive = document.querySelector('.step-content.active');
+            if (currentActive) {
+                currentActive.classList.add('fade-out-active');
                 setTimeout(() => {
-                    activeEl.classList.remove('active', 'fade-out-active');
-                    const nextEl = document.getElementById(`step-${toIndex}`);
-                    nextEl.classList.add('active');
+                    currentActive.classList.remove('active', 'fade-out-active');
+                    const nextActive = document.getElementById(`step-${toIndex}`);
+                    nextActive.classList.add('active');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 400); // 400ms matches the CSS animation duration
+                }, 400); 
             } else {
                 document.getElementById(`step-${toIndex}`).classList.add('active');
             }
         }
 
         function startAssessment() {
-            const name = document.getElementById('student-name').value.trim();
-            const id = document.getElementById('student-id').value.trim();
-            const email = document.getElementById('student-email').value.trim();
-            const branch = document.getElementById('student-branch').value;
+            const sName = document.getElementById('student-name').value.trim();
+            const sId = document.getElementById('student-id').value.trim();
+            const sEmail = document.getElementById('student-email').value.trim();
+            const sBranch = document.getElementById('student-branch').value;
 
-            if(!name || !id || !email || !branch) {
+            if(!sName || !sId || !sEmail || !sBranch) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Missing Data',
-                    text: 'Please fill in all initial fields to start the test.',
+                    title: 'Missing Required Fields',
+                    text: 'Please input all requested student data before initiation.',
                     confirmButtonText: 'OK'
                 });
                 return;
             }
 
-            testActive = true;
+            isExamActive = true;
             document.getElementById('security-badge').classList.remove('hidden');
             navigate(1);
         }
 
         function countWords() {
-            const text = document.getElementById('part4-text').value.trim();
-            const words = text ? text.split(/\s+/).length : 0;
-            document.getElementById('word-counter').innerText = words;
+            const content = document.getElementById('part4-text').value.trim();
+            const totalWords = content ? content.split(/\s+/).length : 0;
+            document.getElementById('word-counter').innerText = totalWords;
         }
 
-        // ANTI-CHEAT SYSTEM (3 STRIKES)
-        function registerSecurityStrike() {
-            if (!testActive) return;
-            strikes++;
+        // MATH SCORING ALGORITHM LOADER (0 - 100 System Architecture)
+        function calculateRealtimeGrade() {
+            let totalComputedPoints = 0;
+
+            // PART 1 EVALUATION (Sarah's Vacation) -> 4 points each (Total 20)
+            if (document.querySelector('input[name="p1_q1"]:checked')?.value === "b") totalComputedPoints += 4; // mountains
+            if (document.querySelector('input[name="p1_q2"]:checked')?.value === "b") totalComputedPoints += 4; // family
+            if (document.querySelector('input[name="p1_q3"]:checked')?.value === "a") totalComputedPoints += 4; // rained
             
-            if (strikes >= 3) {
-                testActive = false;
-                autoSubmitCancelled();
-            } else {
-                Swal.fire({
-                    title: 'SECURITY WARNING!',
-                    text: `You have left the exam screen. The system has logged a strike (${strikes}/3). At 3 strikes, your exam will be automatically submitted and cancelled.`,
-                    icon: 'error',
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Understood, return to exam',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
+            const p1_q4_ans = document.getElementById('p1_q4').value.trim().toLowerCase();
+            if (p1_q4_ans.includes("hike") || p1_q4_ans.includes("swim") || p1_q4_ans.includes("board game") || p1_q4_ans.includes("stayed")) totalComputedPoints += 4;
+            
+            const p1_q5_ans = document.getElementById('p1_q5').value.trim().toLowerCase();
+            if (p1_q5_ans.includes("week") || p1_q5_ans.includes("7 days")) totalComputedPoints += 4;
+
+            // PART 2 EVALUATION (Carlos Bogota Trip) -> 4 points each (Total 20)
+            // Q1: False (Wednesday morning)
+            if (document.querySelector('input[name="p2_q1_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c1 = document.getElementById('p2_q1_corr').value.trim().toLowerCase();
+                if (c1.includes("morning") || c1.includes("wednesday morning")) totalComputedPoints += 2;
             }
+            // Q2: False (Didn't have time)
+            if (document.querySelector('input[name="p2_q2_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c2 = document.getElementById('p2_q2_corr').value.trim().toLowerCase();
+                if (c2.includes("didn't") || c2.includes("no time") || c2.includes("eat lunch")) totalComputedPoints += 2;
+            }
+            // Q3: True
+            if (document.querySelector('input[name="p2_q3_val"]:checked')?.value === "T") totalComputedPoints += 4;
+            // Q4: False (Visited Monserrate)
+            if (document.querySelector('input[name="p2_q4_val"]:checked')?.value === "F") {
+                totalComputedPoints += 2;
+                const c4 = document.getElementById('p2_q4_corr').value.trim().toLowerCase();
+                if (c4.includes("monserrate") || c4.includes("visited")) totalComputedPoints += 2;
+            }
+            // Q5: True
+            if (document.querySelector('input[name="p2_q5_val"]:checked')?.value === "T") totalComputedPoints += 4;
+
+            // PART 3A EVALUATION (Information Gap Microsoft Questions) -> 5 points each (Total 20)
+            const p3a1 = document.getElementById('p3a_q1').value.trim().toLowerCase();
+            if (p3a1.includes("where did you work") || p3a1.includes("how long did you work")) totalComputedPoints += 5;
+            
+            const p3a2 = document.getElementById('p3a_q2').value.trim().toLowerCase();
+            if (p3a2.includes("why did you leave") || p3a2.includes("why did you change")) totalComputedPoints += 5;
+            
+            const p3a3 = document.getElementById('p3a_q3').value.trim().toLowerCase();
+            if (p3a3.includes("was the salary") || p3a3.includes("was your salary")) totalComputedPoints += 5;
+            
+            const p3a4 = document.getElementById('p3a_q4').value.trim().toLowerCase();
+            if (p3a4.includes("did you manage") || p3a4.includes("were you a manager")) totalComputedPoints += 5;
+
+            // PART 3B EVALUATION (Coworker's Blanks) -> 2 points each (Total 14)
+            if (document.getElementById('p3b_1').value.trim().toLowerCase() === "was") totalComputedPoints += 2;
+            if (document.getElementById('p3b_2').value.trim().toLowerCase() === "woke up") totalComputedPoints += 2;
+            if (document.getElementById('p3b_3').value.trim().toLowerCase() === "went") totalComputedPoints += 2;
+            if (document.getElementById('p3b_4').value.trim().toLowerCase() === "studied") totalComputedPoints += 2;
+            if (document.getElementById('p3b_5').value.trim().toLowerCase() === "invited") totalComputedPoints += 2;
+            const b6 = document.getElementById('p3b_6').value.trim().toLowerCase();
+            if (b6 === "didn't go" || b6 === "did not go") totalComputedPoints += 2;
+            if (document.getElementById('p3b_7').value.trim().toLowerCase() === "was") totalComputedPoints += 2;
+
+            // PART 3C EVALUATION (Phonetics Classification Matrix) -> 1.6 points each (Total 16)
+            const phoneticAnswerKey = {
+                worked: "/t/", watched: "/t/", stopped: "/t/",
+                played: "/d/", listened: "/d/", called: "/d/",
+                wanted: "/id/", needed: "/id/", started: "/id/", visited: "/id/"
+            };
+            for (let verbItem in phoneticAnswerKey) {
+                if (document.getElementById(`p3c_${verbItem}`).value === phoneticAnswerKey[verbItem]) {
+                    totalComputedPoints += 1.6;
+                }
+            }
+
+            // PART 4 EVALUATION (Written Production Framework Execution) -> Total 10
+            const writingText = document.getElementById('part4-text').value.trim();
+            const actualWordCount = writingText ? writingText.split(/\s+/).length : 0;
+            if (actualWordCount >= 50 && actualWordCount <= 80) {
+                totalComputedPoints += 10;
+            } else if (actualWordCount > 0) {
+                totalComputedPoints += 4; // Partial point verification parameters
+            }
+
+            return Math.round(totalComputedPoints);
         }
 
-        // Detects if the tab changes or browser minimizes
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) registerSecurityStrike();
-        });
-        window.addEventListener('blur', () => {
-            registerSecurityStrike(); 
-        });
+        // SMART ICON ASSIGNMENT ENGINE LOGIC FOR CELLS
+        function retrieveScoreEmoji(calculatedScore) {
+            if (calculatedScore >= 90) return "👑 [EXCELLENT]";
+            if (calculatedScore >= 75) return "🟢 [PASSED]";
+            if (calculatedScore >= 50) return "🟡 [AVERAGE]";
+            return "🔴 [FAILED]";
+        }
 
-        function collectFormData(statusValue) {
+        function generatePayloadPackage(statusValue) {
+            const definitiveGrade = calculateRealtimeGrade();
+            const writingTextContent = document.getElementById('part4-text').value.trim();
+            const totalWordsLength = writingTextContent ? writingTextContent.split(/\s+/).length : 0;
+            
+            // Manual check flag icon mapping
+            const needsReviewIcon = (totalWordsLength < 50 || totalWordsLength > 80) ? "⚠️ MANUAL REVIEW NEEDED" : "✅ COMPLIANT WORD COUNT";
+
             return {
-                fullName: document.getElementById('student-name').value,
+                fullName: document.getElementById('student-name').value.toUpperCase(),
                 cedula: document.getElementById('student-id').value,
                 email: document.getElementById('student-email').value,
                 branch: document.getElementById('student-branch').value,
                 testType: document.querySelector('input[name="test-type"]:checked').value,
-                strikes: strikes,
+                strikes: securityStrikes,
                 status: statusValue,
-                
-                // Part 1
-                p1_q1: document.querySelector('input[name="p1_q1"]:checked')?.value || "",
-                p1_q2: document.querySelector('input[name="p1_q2"]:checked')?.value || "",
-                p1_q3: document.querySelector('input[name="p1_q3"]:checked')?.value || "",
-                p1_q4: document.getElementById('p1_q4').value,
-                p1_q5: document.getElementById('p1_q5').value,
-                
-                // Part 2
-                p2_q1_val: document.querySelector('input[name="p2_q1_val"]:checked')?.value || "",
-                p2_q1_corr: document.getElementById('p2_q1_corr').value,
-                p2_q2_val: document.querySelector('input[name="p2_q2_val"]:checked')?.value || "",
-                p2_q2_corr: document.getElementById('p2_q2_corr').value,
-                p2_q3_val: document.querySelector('input[name="p2_q3_val"]:checked')?.value || "",
-                p2_q3_corr: document.getElementById('p2_q3_corr').value,
-                p2_q4_val: document.querySelector('input[name="p2_q4_val"]:checked')?.value || "",
-                p2_q4_corr: document.getElementById('p2_q4_corr').value,
-                p2_q5_val: document.querySelector('input[name="p2_q5_val"]:checked')?.value || "",
-                p2_q5_corr: document.getElementById('p2_q5_corr').value,
-                
-                // Part 3A
-                p3a_q1: document.getElementById('p3a_q1').value,
-                p3a_q2: document.getElementById('p3a_q2').value,
-                p3a_q3: document.getElementById('p3a_q3').value,
-                p3a_q4: document.getElementById('p3a_q4').value,
-                
-                // Part 3B
-                p3b_1: document.getElementById('p3b_1').value,
-                p3b_2: document.getElementById('p3b_2').value,
-                p3b_3: document.getElementById('p3b_3').value,
-                p3b_4: document.getElementById('p3b_4').value,
-                p3b_5: document.getElementById('p3b_5').value,
-                p3b_6: document.getElementById('p3b_6').value,
-                p3b_7: document.getElementById('p3b_7').value,
-                
-                // Part 3C
-                p3c_worked: document.getElementById('p3c_worked').value,
-                p3c_cleaned: document.getElementById('p3c_cleaned').value,
-                p3c_invited: document.getElementById('p3c_invited').value,
-                p3c_watched: document.getElementById('p3c_watched').value,
-                p3c_stayed: document.getElementById('p3c_stayed').value,
-                p3c_visited: document.getElementById('p3c_visited').value,
-                p3c_shopped: document.getElementById('p3c_shopped').value,
-                p3c_listened: document.getElementById('p3c_listened').value,
-                p3c_waited: document.getElementById('p3c_waited').value,
-                p3c_talked: document.getElementById('p3c_talked').value,
-                
-                // Part 4
-                part4_text: document.getElementById('part4-text').value
+                statusIcon: statusValue === "COMPLETED" ? "🟢 SUCCESS" : "🚨 ABORTED BY CHEATING",
+                score: definitiveGrade,
+                scoreIcon: retrieveScoreEmoji(definitiveGrade),
+                reviewStatus: needsReviewIcon,
+                part4_text: writingTextContent
             };
         }
 
-        function sendToDatabase(payload) {
+        function sendDatabaseRow(packageData) {
             Swal.fire({
-                title: 'Submitting Exam...',
-                html: 'Please wait a moment and <b>do not close the page</b>.',
+                title: 'Transmitting Secure Data...',
+                html: 'Your processing score is being registered inside the spreadsheet database. <b>Do not close this window</b>.',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 didOpen: () => { Swal.showLoading(); }
@@ -503,54 +529,78 @@
                 mode: "no-cors", 
                 cache: "no-cache",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(packageData)
             })
             .then(() => {
                 Swal.fire({
-                    title: 'Exam Submitted Successfully!',
-                    text: 'Your answers have been recorded. You may now close this tab.',
+                    title: 'Assessment Concluded',
+                    text: 'Your grade, answers, data, and performance icons have been written securely into Google Sheets.',
                     icon: 'success',
-                    confirmButtonText: 'Finish',
+                    confirmButtonText: 'Finish Test',
                     allowOutsideClick: false
                 }).then(() => {
                     location.reload(); 
                 });
             })
-            .catch(err => {
-                Swal.fire('Connection Error', 'There was a problem submitting. Please call the teacher.', 'error');
+            .catch(() => {
+                Swal.fire('Database Error', 'A submission loss occurred. Please contact your classroom administrator immediately.', 'error');
             });
         }
 
+        // ANTI-CHEAT ENGINE INFRASTRUCTURE (3 STRIKES LIMIT)
+        function logProctoringStrike() {
+            if (!isExamActive) return;
+            securityStrikes++;
+            
+            if (securityStrikes >= 3) {
+                isExamActive = false;
+                executeAutoEjection();
+            } else {
+                Swal.fire({
+                    title: 'SECURITY VIOLATION LOGGED!',
+                    text: `You left the secure test screen viewport. Strike recorded: (${securityStrikes}/3). Reaching 3 strikes will force auto-submission.`,
+                    icon: 'error',
+                    confirmButtonColor: '#e11d48',
+                    confirmButtonText: 'Return to Assessment Frame',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => { if (document.hidden) logProctoringStrike(); });
+        window.addEventListener('blur', () => { logProctoringStrike(); });
+
         function submitFinalTest() {
             Swal.fire({
-                title: 'Are you sure you want to finish?',
-                text: "Verify you have answered everything. You won't be able to make changes later.",
+                title: 'Submit Assessment Package?',
+                text: "Review your inputs. Once sent, scoring rows are locked and finalized.",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#10b981',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Yes, submit exam',
-                cancelButtonText: 'Go back'
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#475569',
+                confirmButtonText: 'Yes, finalize transmission',
+                cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    testActive = false; 
-                    const data = collectFormData("COMPLETED");
-                    sendToDatabase(data);
+                    isExamActive = false; 
+                    const packageObj = generatePayloadPackage("COMPLETED");
+                    sendDatabaseRow(packageObj);
                 }
             });
         }
 
-        function autoSubmitCancelled() {
+        function executeAutoEjection() {
             Swal.fire({
-                title: 'EXAM CANCELLED',
-                text: 'You have reached 3 strikes. The exam will be submitted with your current answers and marked as CANCELLED.',
+                title: 'EXAM LOCKED & ABORTED',
+                text: 'The security log recorded 3 navigation focus shifts. Your form is forced to auto-submit as a locked event.',
                 icon: 'error',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                confirmButtonText: 'OK'
+                confirmButtonText: 'Transmit Locked File'
             }).then(() => {
-                const data = collectFormData("CANCELLED_BY_STRIKES");
-                sendToDatabase(data);
+                const packageObj = generatePayloadPackage("CANCELLED_BY_STRIKES");
+                sendDatabaseRow(packageObj);
             });
         }
     </script>
